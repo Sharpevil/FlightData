@@ -33,7 +33,7 @@ def check_heading(flight, path, leniency):
 
 
 #Check to see if a flight's altitude falls within the altitude of a path, potentially allowing it to be leniency units outside.
-def check_altitude(flight, path, leniency):
+def check_altitude(flight, path, leniency=0):
     return
 
 
