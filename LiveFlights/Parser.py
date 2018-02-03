@@ -1,4 +1,4 @@
-FILE_NAME_CSV = "C:\\Users\\remem\\Downloads\\live_2018-01-20-20_32.csv"                      # must be replaced with path being used.
+FILE_NAME_CSV = "../DATA/live_2018-01-20-20_32.csv"                      # must be replaced with path being used.
 
 file = open(FILE_NAME_CSV, "r")         # "r" means read mode
 flights = {}
