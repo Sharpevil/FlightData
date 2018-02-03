@@ -7,7 +7,7 @@ writefile = open(WRITE_FILE_NAME_CSV, "w")
 writefile.write('''<?xml version="1.0" encoding="utf-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
-	<Style id="polystyle">
+	    <Style id="yellow">
 	<LineStyle>
 	<color>7f00ffff</color>
 	<width>1</width>
@@ -16,7 +16,8 @@ writefile.write('''<?xml version="1.0" encoding="utf-8"?>
 	<color>7f00ff00</color>
 	</PolyStyle>
 	</Style>
-		<Style id="newstyle">
+	
+		<Style id="red">
 	<LineStyle>
 	<color>7f0000ff</color>
 	<width>1</width>
@@ -25,6 +26,27 @@ writefile.write('''<?xml version="1.0" encoding="utf-8"?>
 	<color>00000000</color>
 	</PolyStyle>
 	</Style>
+	
+	    <Style id="blue">
+	<LineStyle>
+	<color>7fff0000</color>
+	<width>1</width>
+	</LineStyle>
+	<PolyStyle>
+	<color>7fff0000</color>
+	</PolyStyle>
+	</Style>
+	
+	    <Style id="green">
+	<LineStyle>
+	<color>7f00ff00</color>
+	<width>1</width>
+	</LineStyle>
+	<PolyStyle>
+	<color>7f00ff00</color>
+	</PolyStyle>
+	</Style>
+
 	''')
 entry = ""
 
@@ -39,7 +61,7 @@ for line in file:
     latitude = lineList[1]
     longitude = lineList[2]
     altitude = lineList[3]
-    #heading = float(lineList[9])
+    heading = float(lineList[9])
     airCraftID = lineList[8]
 
     if((airCraftID != lastAirCraftID)):
@@ -48,9 +70,20 @@ for line in file:
         else:
             writefile.write('''<Placemark>\n ''')
 
+        #uncomment and comment the color = yellow part to color paths based on direction. 
+        # if(heading < 90):
+        #     color = "blue"
+        # elif(heading < 180):
+        #     color = "red"
+        # elif(heading < 270):
+        #     color = "yellow"
+        # else:
+        #     color = "green"
+        color = "yellow"
+
         writefile.write("\t<name>" + airCraftID + "</name>\n" )
         writefile.write("\t<description>" + airCraftID + "</description>\n" )
-        writefile.write('''\t<styleUrl>#polystyle</styleUrl>\n''')
+        writefile.write("\t<styleUrl>#" + color + "</styleUrl>\n")
         writefile.write("\t<LineString>\n\t<altitudeMode>absolute</altitudeMode>\n")
         writefile.write("\t\t<coordinates>")
 
