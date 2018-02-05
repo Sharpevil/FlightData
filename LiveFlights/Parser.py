@@ -1,4 +1,4 @@
-FILE_NAME_CSV = "../DATA/live_2018-01-20-20_32.csv"                      # must be replaced with path being used.
+FILE_NAME_CSV = "C:\\Users\\remem\\Downloads\\sorted_2018-01-20-20_32"                      # must be replaced with path being used.
 
 file = open(FILE_NAME_CSV, "r")         # "r" means read mode
 flights = {}
@@ -15,7 +15,6 @@ for line in file:
     altitude = lineList[3]
     heading = float(lineList[9])
     airCraftID = lineList[7]
-    #TODO create map of Strings to FlightEntries and add items as needed.
 
     if(airCraftID in flights):
         flights[airCraftID] = flights[airCraftID] + '\n' + line
