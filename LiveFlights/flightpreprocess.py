@@ -41,7 +41,7 @@ def preprocess(flights_path = "C:\\Users\\remem\\Downloads\\flights\\training.cs
     # print( len(alldata))
     # print(len(alllabels))
     # print(alllabels)
-    flights_file.close
+    flights_file.close()
     clf = tree.DecisionTreeClassifier()
     clf.fit(alldata,
             alllabels
