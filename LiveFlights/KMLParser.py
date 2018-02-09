@@ -1,5 +1,5 @@
-FILE_NAME_CSV = "C:\\Users\\Resea\\Downloads\\sorted_2018-01-20-20_32.csv"                      # must be replaced with path being used.
-WRITE_FILE_NAME_CSV = "C:\\Users\\Resea\\Downloads\\sorted_2018-01-20-20_32.kml"
+FILE_NAME_CSV = "C:\\Users\\remem\\Downloads\\flights\\sorted_2018-01-20-20_32.csv"                      # must be replaced with path being used.
+WRITE_FILE_NAME_CSV = "C:\\Users\\remem\\Downloads\\flights\\kml\\sorted_2018-01-20-20_32.kml"
 
 file = open(FILE_NAME_CSV, "r")         # "r" means read mode
 
@@ -54,7 +54,7 @@ lastAirCraftID = ""
 
 lineNum = 0
 for line in file:
-    print lineNum
+    print (lineNum)
     lineNum = lineNum + 1
     lineList = line.split(",")#do stuff
 
@@ -71,15 +71,15 @@ for line in file:
             writefile.write('''<Placemark>\n ''')
 
         #uncomment and comment the color = yellow part to color paths based on direction. 
-        # if(heading < 90):
-        #     color = "blue"
-        # elif(heading < 180):
-        #     color = "red"
-        # elif(heading < 270):
-        #     color = "yellow"
-        # else:
-        #     color = "green"
-        color = "yellow"
+        if(heading < 90):
+            color = "blue"
+        elif(heading < 180):
+            color = "red"
+        elif(heading < 270):
+            color = "yellow"
+        else:
+            color = "green"
+        # color = "yellow"
 
         writefile.write("\t<name>" + airCraftID + "</name>\n" )
         writefile.write("\t<description>" + airCraftID + "</description>\n" )
