@@ -1,98 +1,94 @@
-import pickle
-#import cPickle
-import numpy as np
-import pandas as pd
+from sklearn import tree
+from sklearn.naive_bayes import GaussianNB
+from LiveFlights.Flightpreprocess import setUpFiles
+
+def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\remem\\Downloads\\flights\\training.csv", test_flights_path = "C:\\Users\\remem\\Downloads\\flights\\tests.csv"):
+    if(setupFiles):
+        setUpFiles(stop_at_line = test_size + data_size)
+
+    alldata = [None]*data_size
+    alllabels = [None]*data_size
+    lineNum = 0
+    train_flights_file = open(train_flights_path)
+    for line in train_flights_file:
+        if(lineNum%100000 == 0):
+            print(lineNum)
+
+        lineList = line.split(',')#do stuff
+
+        latitude = (lineList[1])
+        longitude = (lineList[2])
+        altitude = (lineList[3])
+        heading = (lineList[9])
+        airplane = lineList[7]
+        #airCraftID = lineList[7]
+        callSign = lineList[8]
+        #ingestionTime = lineList[13]
+
+        data = [float(latitude) , float(longitude), float(altitude), float(heading)]
+        label = callSign
+        alldata[lineNum] = data
+        alllabels[lineNum ] = label
+        lineNum = lineNum + 1
+
+    train_flights_file.close()
+    clf = tree.DecisionTreeClassifier()# 94.5% on 1% of the data
+    #clf = GaussianNB() // 51.166%
+    clf.fit(alldata,
+            alllabels
+            )
+
+    test_flights_file = open(test_flights_path)
+    alltestdata = [None]*test_size
+    alltestlabels = [None]*test_size
+    lineNum = 0
+
+    for line in test_flights_file:
+        lineList = line.split(',')#do stuff
+        latitude = (lineList[1])
+        longitude = (lineList[2])
+        altitude = (lineList[3])
+        heading = (lineList[9])
+        airplane = lineList[7]
+        # airCraftID = lineList[7]
+        callSign = lineList[8]
+        # ingestionTime = lineList[13]
+
+        data = [float(latitude), float(longitude), float(altitude), float(heading)]
+        label = callSign
+        alltestdata[lineNum] = data
+        alltestlabels[lineNum] = label
+        lineNum = lineNum + 1
+
+    test_flights_file.close()
+    print(clf.score(alltestdata, alltestlabels))
+    # print(clf.predict([[40.88768,-75.68646,11825,180.0]]))
+    # print("Should be SAA203")
+
+#0.946502801374
+onepercenttestsize = 5533
+#0.858261400962
+tenpercenttestsize = 52364
+fulltestsize = 500000
+
+
+#twenty percent - 0.8156
+
+#twenty-five percent - 0.805128
+
+#26.25% - 0.802392380952
+
+#27.5 %    - MemoryError: could not allocate 32044482560 bytes
+
+#thirty percent - MemoryError: could not allocate 34846277632 bytes
 
 
 
-from sklearn import cross_validation
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_selection import SelectPercentile, f_classif
-from sklearn.naive_bayes import  GaussianNB
+onepercentdatasize = 110646 - 5533
+tenpercentdatasize = 1047266 - 52364
+fulldatasize = 9500000
 
 
-FILE_NAME_CSV = "C:\\Users\\remem\\Downloads\\sorted_2018-01-20-20_32.csv"
+runPredictions(setupFiles = True,onepercenttestsize = 131250, data_size = onepercentdatasize)
 
-#8 is the label
-df = pd.read_csv(FILE_NAME_CSV, usecols=[1,2,3,9])
-dflabel = pd.read_csv(FILE_NAME_CSV, usecols=[8])
-
-#file = open(FILE_NAME_CSV, "r")         # "r" means read mode
-#alldata = []
-#alllabels = []
-
-lineNum = 0
-# for line in file:
-#     lineNum = lineNum + 1
-#     if(lineNum%1000 == 0):
-#         print(lineNum)
-#     lineList = line.split(",")#do stuff
-#
-#     messageTime = lineList[0]
-#     latitude = (lineList[1])
-#     longitude = (lineList[2])
-#     altitude = (lineList[3])
-#     heading = (lineList[9])
-#     airCraftID = lineList[7]
-#     callSign = lineList[9]
-#     ingestionTime = lineList[13]
-#
-#     data = latitude + longitude + altitude + heading
-#     label = callSign
-#     alldata.append(data)
-#     alllabels.append(label)
-#
-#     if (lineNum == 110646):  # 110646): #1047266*/):
-#         print(lineNum)
-#         break
-#
-# alldata = np.array(alldata)
-# alllabels = np.array(alllabels)
-features_train, features_test, labels_train, labels_test = cross_validation.train_test_split(df, dflabel,test_size=0.5, random_state=42)
-print("Done training1")
-
-vectorizer=TfidfVectorizer(sublinear_tf=True,max_df=0.5,stop_words='english')
-features_train_transformed = vectorizer.fit_transform(features_train)
-features_test_transformed = vectorizer.transform(features_test)
-print("Done training2")
-
-vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
-                             stop_words='english')
-features_train_transformed = vectorizer.fit_transform(features_train)
-features_test_transformed = vectorizer.transform(features_test)
-
-print("Done training3")
-
-### feature selection, because text is super high dimensional and
-### can be really computationally chewy as a result
-selector = SelectPercentile(f_classif, percentile=10)
-selector.fit(features_train_transformed, labels_train)
-features_train_transformed = selector.transform(features_train_transformed).toarray()
-features_test_transformed = selector.transform(features_test_transformed).toarray()
-print("Done training4")
-
-clf = GaussianNB()
-clf.fit(features_train_transformed, labels_train)#(features_train_transformed, labels_train)
-
-print("Done fitting")
-
-print(clf.score(features_test, labels_test))#features_test, labels_test))# for test
-
-
-
-
-# 1. message time (unix time - use https://www.epochconverter.com/ to convert to human readable format)
-# 2: latitude (degrees)
-# 3: longitude (degrees)
-# 4: altitude (feet)
-# 5: ground speed (knots)
-# 6: vertical climb rate (feet/min)
-# 7: squawk code
-# 8: aircraft id (hexadecimal ID, unique to a particular flight)
-# 9: call sign
-# 10: heading (degrees)
-# 11: alert flag
-# 12: emergency flag
-# 13: is on ground flag
-# 14: ingestion time (unix time - use https://www.epochconverter.com/ to convert to human readable format)
-
+#cuda
