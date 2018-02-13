@@ -1,5 +1,6 @@
 import numpy as yummy_yummy_numpy
 import csv
+import FlightAwareScraper
 from Path import Path
 from Flight import Flight
 
@@ -32,4 +33,27 @@ def import_flights(file, max_flights=0):
             flight_list.append(Flight(row[0], row[1], row[2], row[3], row[4], row[5]))
             i += 1
     return yummy_yummy_numpy.array(flight_list)
+
+
+def get_airports(file, new_file, max_flights=0):
+    airport_list = []
+    with open(file, 'rb') as flightfile:
+        flightreader = csv.reader(flightfile, delimiter=',')
+        i = 1
+        callsigns = []
+        for row in flightreader:
+            if i >= max_flights != 0:
+                break
+            if row[8] not in callsigns:
+                callsigns.append(row[8])
+                airport_list.append(FlightAwareScraper.get_airports(row[8]))
+            i += 1
+    with open(new_file, 'wb') as airportfile:
+        airportwriter = csv.writer(airportfile, delimiter=',')
+        for entry in airport_list:
+            airportwriter.writerow(entry)
+
+
+get_airports('./DATA/sorted_2018-01-20-20_32.csv', './DATA/callsign_airports.csv')
+
 

@@ -1,4 +1,5 @@
 class Path:
-    def __init__(self, path_sections):
-        self.ats_ident = path_sections[0].ats_ident
-        self.path_sections = path_sections
+
+    def __init__(self, path_entries, callsign):
+        self.callsign = callsign
+        self.path_entries = path_entries
