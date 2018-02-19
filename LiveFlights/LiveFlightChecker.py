@@ -1,4 +1,5 @@
 import nvector as nv
+from FlightEntry import FlightEntry
 
 frame = nv.FrameE(a=6371e3, f=0)
 
@@ -22,7 +23,7 @@ def point_on_path(flight_entry, path, leniency):
 
 # Check to see if a flight follows a given path, within leniency km of distance.
 # Determines tendency to stay on flight path by averaging the distance of each point from the path.
-# Returns between 0 and 1 on a match. Higher numbers
+# Returns between 0 and 1 on a match. Higher numbers reflect greater deviation.
 def flight_on_path(flight, path, leniency):
     deviation = 0
     for flight_entry in flight.flightEntries:
@@ -37,3 +38,4 @@ def check_heading(flight, path, leniency):
 # outside.
 def check_altitude(flight, path, leniency=0):
     return
+
