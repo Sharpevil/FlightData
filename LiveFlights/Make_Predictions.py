@@ -1,8 +1,9 @@
 from sklearn import tree
 from sklearn.naive_bayes import GaussianNB
-from LiveFlights.Flightpreprocess import setUpFiles
+from LiveFlights.flightpreprocess import setUpFiles
 
-def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\remem\\Downloads\\flights\\training.csv", test_flights_path = "C:\\Users\\remem\\Downloads\\flights\\tests.csv"):
+# the percentages were based on running the data on a csv file that was sorted by the plane (airCraftID)
+def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\Resea\\Downloads\\flights\\training.csv", test_flights_path = "C:\\Users\\remem\\Downloads\\flights\\tests.csv"):
     if(setupFiles):
         setUpFiles(stop_at_line = test_size + data_size)
 
@@ -32,8 +33,8 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
         lineNum = lineNum + 1
 
     train_flights_file.close()
-    clf = tree.DecisionTreeClassifier()# 94.5% on 1% of the data
-    #clf = GaussianNB() // 51.166%
+    clf = tree.DecisionTreeClassifier()# 94.5% on 1% of the data for latitude, longitude, altitude, heading
+    #clf = GaussianNB() // 51.166%       on 1% of the data for latitude, longitude, altitude, heading
     clf.fit(alldata,
             alllabels
             )
@@ -89,6 +90,6 @@ tenpercentdatasize = 1047266 - 52364
 fulldatasize = 9500000
 
 
-runPredictions(setupFiles = True,onepercenttestsize = 131250, data_size = onepercentdatasize)
+runPredictions(setupFiles = False,test_size = onepercenttestsize, data_size = onepercentdatasize)
 
 #cuda
