@@ -1,5 +1,23 @@
 import urllib2
 import os
+import sys
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+from PyQt4.QtWebKit import *
+from lxml import html
+
+
+class Render(QWebPage):
+    def __init__(self, url):
+        self.app = QApplication(sys.argv)
+        QWebPage.__init__(self)
+        self.loadFinished.connect(self._loadFinished)
+        self.mainFrame().load(QUrl(url))
+        self.app.exec_()
+
+    def _loadFinished(self, result):
+        self.frame = self.mainFrame()
+        self.app.quit()
 
 def get_airports(callsign):
     response = urllib2.urlopen('https://flightaware.com/live/flight/' + callsign)
@@ -40,3 +58,8 @@ def get_flight_history(callsign):
                 flight.append("ERROR")
         history.append(flight)
     return history
+
+# def get_flight_history(callsign):
+#     response = Render('https://flightaware.com/live/flight/' + callsign + '/history/500')
+#     html = response.frame.toHtml().toAscii()
+#     print html
