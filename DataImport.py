@@ -63,12 +63,17 @@ def get_flight_history(file, new_file, max_flights=0):
         for row in flightreader:
             if i >= max_flights != 0:
                 break
-            if row[8] not in callsign_list:
-                callsign_list.append(row[8])
-                history_list.append(FlightAwareScraper.get_flight_history(row[8]))
+            try:
+                if row[8] not in callsign_list:
+                    callsign_list.append(row[8])
+                    history_list.append(FlightAwareScraper.get_flight_history(row[8]))
+            except Exception:
+                print "Error found at line" + str(i)
+
             i += 1
             if i % 100 == 0:
                 print i
+
     with open(new_file, 'wb') as historyfile:
         historywriter = csv.writer(historyfile, delimiter=',')
         historywriter.writerow(['callsign', 'date', 'aircraft', 'origin_long', 'origin',
@@ -78,5 +83,5 @@ def get_flight_history(file, new_file, max_flights=0):
             for datapoint in entry:
                 historywriter.writerow(datapoint)
 
-
-get_flight_history('./DATA/sorted_2018-01-20-20_32.csv', './DATA/flight_history.csv')
+print "current4"
+get_flight_history('C:\\Users\\Resea\\Downloads\\flights\\live_2018-02-23-13_10.clean.csv', 'C:\\Users\\Resea\\Downloads\\flights\\newHistory.csv')

@@ -3,7 +3,7 @@ from sklearn.naive_bayes import GaussianNB
 from LiveFlights.flightpreprocess import setUpFiles
 
 # the percentages were based on running the data on a csv file that was sorted by the plane (airCraftID)
-def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\Resea\\Downloads\\flights\\training.csv", test_flights_path = "C:\\Users\\remem\\Downloads\\flights\\tests.csv"):
+def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\Resea\\Downloads\\flights\\training.csv", test_flights_path = "C:\\Users\\Resea\\Downloads\\flights\\tests.csv"):
     if(setupFiles):
         setUpFiles(stop_at_line = test_size + data_size)
 
@@ -90,6 +90,6 @@ tenpercentdatasize = 1047266 - 52364
 fulldatasize = 9500000
 
 
-runPredictions(setupFiles = False,test_size = onepercenttestsize, data_size = onepercentdatasize)
+runPredictions(setupFiles = True,test_size = onepercenttestsize, data_size = onepercentdatasize)
 
 #cuda

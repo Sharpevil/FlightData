@@ -19,7 +19,7 @@ def get_airports(callsign):
     return [callsign,origin,destination]
 
 def get_flight_history(callsign):
-    response = urllib2.urlopen('https://flightaware.com/live/flight/' + callsign + '/history')
+    response = urllib2.urlopen(r'https://flightaware.com/live/flight/' + callsign + r'/history/500')
     html = response.read()
     html = html.split('<td class="nowrap" >')
 
@@ -40,3 +40,4 @@ def get_flight_history(callsign):
                 flight.append("ERROR")
         history.append(flight)
     return history
+
