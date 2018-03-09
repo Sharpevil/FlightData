@@ -1,5 +1,5 @@
 
-def setUpFiles(flights_path = "C:\\Users\\Resea\\Downloads\\flights\\ranges2\\39.7,-75.0.csv", stop_at_line = 110646):
+def setUpFiles(flights_path = "C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", stop_at_line = 110646):
     readfile = open(flights_path, "r")
     writefiletraining = open("C:\\Users\\Resea\\Downloads\\flights\\training.csv", 'w')
     writefiletests = open("C:\\Users\\Resea\\Downloads\\flights\\tests.csv", 'w')
@@ -33,9 +33,7 @@ def add_Origin_And_Destination(flights_file = "C:\\Users\\Resea\\Downloads\\flig
     destinations_Map = {}
     for line in origins_And_Destinations:
         values = line.split(',')
-        if(values[0] != ''):
-            origins_Map[values[0]] = values[1]
-            destinations_Map[values[0]] = values[2]
+        callSign = values[0]
     print('starting to change files')
     linenum =0
     for line in flights:
