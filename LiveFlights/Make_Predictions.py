@@ -2,8 +2,16 @@ from sklearn import tree
 from sklearn.naive_bayes import GaussianNB
 from LiveFlights.flightpreprocess import setUpFiles
 
+floor_latitude = 5  #leaves two places after the decimal
+floor_longitude = 6 #leaves two place after the decimal
+floor_ground_speed = 3
+floor_vertical_climb_rate = 5
+floor_altitude = 3
+floor_heading = 3
+
 # the percentages were based on running the data on a csv file that was sorted by the plane (airCraftID)
-def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\Resea\\Downloads\\flights\\training.csv", test_flights_path = "C:\\Users\\Resea\\Downloads\\flights\\tests.csv"):
+def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 5533), train_flights_path = "C:\\Users\\remem\\Downloads\\flights\\training.csv",
+                   test_flights_path = "C:\\Users\\remem\\Downloads\\flights\\tests.csv"):
     if(setupFiles):
         setUpFiles(stop_at_line = test_size + data_size)
 
@@ -17,16 +25,19 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
 
         lineList = line.split(',')#do stuff
 
-        latitude = (lineList[1])
-        longitude = (lineList[2])
-        altitude = (lineList[3])
-        heading = (lineList[9])
+        latitude = (lineList[1])[:floor_latitude]
+        longitude = (lineList[2])[:floor_longitude]
+        altitude = (lineList[3])[:floor_altitude]
+        ground_speed = (lineList[4])[:floor_ground_speed]
+        vertical_climb_rate = lineList[5][:floor_vertical_climb_rate]
+        heading = (lineList[9])[:floor_heading]
         airplane = lineList[7]
         #airCraftID = lineList[7]
         callSign = lineList[8]
         #ingestionTime = lineList[13]
 
-        data = [float(latitude) , float(longitude), float(altitude), float(heading)]
+        #data = [float(latitude), float(longitude)]
+        data = [float(latitude), float(longitude), float(altitude), float(heading), float(ground_speed), float(vertical_climb_rate)]
         label = callSign
         alldata[lineNum] = data
         alllabels[lineNum ] = label
@@ -46,16 +57,19 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
 
     for line in test_flights_file:
         lineList = line.split(',')#do stuff
-        latitude = (lineList[1])
-        longitude = (lineList[2])
-        altitude = (lineList[3])
-        heading = (lineList[9])
+        latitude = (lineList[1])[:floor_latitude]
+        longitude = (lineList[2])[:floor_longitude]
+        altitude = (lineList[3])[:floor_altitude]
+        ground_speed = (lineList[4])[:floor_ground_speed]
+        vertical_climb_rate = lineList[5][:floor_vertical_climb_rate]
+        heading = (lineList[9])[:floor_heading]
         airplane = lineList[7]
         # airCraftID = lineList[7]
         callSign = lineList[8]
         # ingestionTime = lineList[13]
 
-        data = [float(latitude), float(longitude), float(altitude), float(heading)]
+        #data = [float(latitude), float(longitude)]
+        data = [float(latitude), float(longitude), float(altitude), float(heading), float(ground_speed), float(vertical_climb_rate)]
         label = callSign
         alltestdata[lineNum] = data
         alltestlabels[lineNum] = label

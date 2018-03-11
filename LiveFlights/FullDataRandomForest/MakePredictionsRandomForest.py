@@ -1,7 +1,7 @@
 from sklearn.externals import joblib
 from sklearn import tree
 
-classifierPath = 'C:\\Users\\Resea\\Downloads\\flights\\DecisionTrees\\Classifier'
+classifierPath = 'C:\\Users\\remem\\Downloads\\flights\\DecisionTrees\\Classifier'
 
 # def loadClassifiers():
 #     classifierPath = 'C:\\Users\\Resea\\Downloads\\flights\\DecisionTrees\\Classifier'
@@ -18,20 +18,27 @@ classifierPath = 'C:\\Users\\Resea\\Downloads\\flights\\DecisionTrees\\Classifie
 # loadClassifiers()
 
 def predict(latitude, longitude, altitude, heading):
-    classifierNum = 1
+    classifierNum = 3000
     map = {}
-
-    while classifierNum != 80:
+    callsign = ""
+    map[""] = 0
+    bestCallSign = callsign
+    while classifierNum != 8266:
         clf = joblib.load(classifierPath + str(classifierNum))
         callsign = clf.predict([[latitude, longitude, altitude, heading]])[0]
-        if(callsign == "JBU874"):
-            print classifierPath + str(classifierNum)
         if(not(callsign in map.keys())):
             map[callsign] = 1
         else:
             map[callsign] = map[callsign] + 1
+            if(map[bestCallSign] < map[callsign]):
+                bestCallSign = callsign
+                print callsign + ":  " + str(map[callsign]) + '//' + str(classifierNum)
+            if("SAA" in callsign):
+                print callsign + ":  " + str(map[callsign]) + '//' + str(classifierNum)
+                print bestCallSign + ":  " + str(map[bestCallSign]) + '//' + str(classifierNum) + "(Best call sign)"
+        if(classifierNum%1000 == 0):
+            print bestCallSign + ":  " + str(map[bestCallSign]) + '//' + str(classifierNum) + "(Best call sign)"
         classifierNum += 1
-    bestCallSign = callsign
     for callsign in map.keys():
         if(map[callsign] > map[bestCallSign]):
             bestCallSign = callsign
@@ -81,4 +88,5 @@ def printPartOfFile():
     for line in open('C:\\Users\\Resea\\Downloads\\flights\\live_2018-02-23-13_10.clean.csv'):
         print line
 
-print score("C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", 10)
+print score("C:\\Users\\remem\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", 10)
+
