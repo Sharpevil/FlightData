@@ -46,6 +46,25 @@ def add_Origin_And_Destination(flights_file = "C:\\Users\\Resea\\Downloads\\flig
             #print(newString)
             new_flights_file.write(newString)
 
+def remove_duplicates(old_file_name, new_file_name):
+    line_set = set()
+    old_file = open(old_file_name, 'r')
+    new_file = open(new_file_name, 'w')
+    duplicates_found = 0
+    for line in old_file:
+        if(line in line_set):
+            duplicates_found += 1
+        else:
+            line_set.add(line)
+            new_file.write(line)
+    old_file.close()
+    new_file.close()
+    print "removed " + str(duplicates_found) + " elements"
+
+remove_duplicates("C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", "C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.noDups.csv" )
+
+
+
 # add_Origin_And_Destination()
 # linenum = 0
 # for line in open("C:\\Users\\remem\\Downloads\\flights\\ODsorted_2018-01-20-20_32.csv", 'r'):
