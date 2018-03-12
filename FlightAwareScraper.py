@@ -1,23 +1,20 @@
 import urllib2
 import os
-import sys
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from PyQt4.QtWebKit import *
-from lxml import html
+import unidecode
+from selenium import webdriver
 
 
-class Render(QWebPage):
-    def __init__(self, url):
-        self.app = QApplication(sys.argv)
-        QWebPage.__init__(self)
-        self.loadFinished.connect(self._loadFinished)
-        self.mainFrame().load(QUrl(url))
-        self.app.exec_()
+def login():
+    ff = webdriver.Firefox()
+    ff.get("https://flightaware.com/account/login")
+    username = ff.find_element_by_name("flightaware_username")
+    password = ff.find_element_by_name("flightaware_password")
+    username.send_keys("MSERESEA")
+    password.send_keys("hcraeser")
+    ff.find_element_by_class_name("actionButton").click()
 
-    def _loadFinished(self, result):
-        self.frame = self.mainFrame()
-        self.app.quit()
+    return ff
+
 
 def get_airports(callsign):
     response = urllib2.urlopen('https://flightaware.com/live/flight/' + callsign)
@@ -33,16 +30,17 @@ def get_airports(callsign):
     if destination_iata != -1:
         destination = html[destination_iata+35:destination_iata+38]
 
+    return [callsign, origin, destination]
 
-    return [callsign,origin,destination]
 
-def get_flight_history(callsign):
-    response = urllib2.urlopen('https://flightaware.com/live/flight/' + callsign + '/history')
-    html = response.read()
-    html = html.split('<td class="nowrap" >')
+def get_flight_history(callsign, webdriver, num_entries=500):
+    webdriver.get('https://flightaware.com/live/flight/' + str(callsign) + '/history/' + str(num_entries))
+    html = webdriver.page_source
+    html = html.split('<td class="nowrap">')
 
-    vital_lines = [0, 1, 2, 4, 6, 8, 10, 11, 12, 13]
+    vital_lines = [1, 3, 5, 7, 10, 12, 12, 15, 16, 18, 19]
     history = []
+
 
     for line in html[1:len(html) - 1]:
         info = ""
@@ -53,13 +51,8 @@ def get_flight_history(callsign):
         info = os.linesep.join([s for s in info.splitlines() if s]).split('\r\n')
         for i in vital_lines:
             try:
-                flight.append(info[i])
+                flight.append(unidecode.unidecode(info[i].split('&nbsp')[0]))
             except IndexError:
                 flight.append("ERROR")
         history.append(flight)
     return history
-
-# def get_flight_history(callsign):
-#     response = Render('https://flightaware.com/live/flight/' + callsign + '/history/500')
-#     html = response.frame.toHtml().toAscii()
-#     print html

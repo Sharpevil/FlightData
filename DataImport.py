@@ -54,34 +54,27 @@ def get_airports(file, new_file, max_flights=0):
             airportwriter.writerow(entry)
 
 
-def get_flight_history(file, new_file, max_flights=0):
-    callsign_list = []
-    history_list = []
-    with open(file, 'rb') as flightfile:
-        flightreader = csv.reader(flightfile, delimiter=',')
-        i = 1
-        for row in flightreader:
-            if i >= max_flights != 0:
-                break
-            try:
-                if row[8] not in callsign_list:
-                    callsign_list.append(row[8])
-                    history_list.append(FlightAwareScraper.get_flight_history(row[8]))
-            except Exception:
-                print "Error found at line" + str(i)
-
-            i += 1
-            if i % 100 == 0:
-                print i
+#For creating a new flight history file
+def get_flight_history(callsign_file, new_file, max_flights=0):
+    webdriver = FlightAwareScraper.login()
 
     with open(new_file, 'wb') as historyfile:
         historywriter = csv.writer(historyfile, delimiter=',')
         historywriter.writerow(['callsign', 'date', 'aircraft', 'origin_long', 'origin',
-                                'destination_long', 'destination', 'departure_time',
-                                'departure_time_zone', 'arrival_time', 'arrival_time_zone'])
-        for entry in history_list:
-            for datapoint in entry:
-                historywriter.writerow(datapoint)
+                                        'destination_long', 'destination', 'departure_time',
+                                        'departure_time_zone', 'arrival_time', 'arrival_time_zone'])
+        with open(callsign_file, 'rb') as flightfile:
+            i = 0
+            for callsign in flightfile.read().split(','):
+                if i >= max_flights != 0:
+                    break
+                try:
+                    flight_history = FlightAwareScraper.get_flight_history(callsign, webdriver)
+                    for datapoint in flight_history:
+                        historywriter.writerow(datapoint)
+                except Exception:
+                    print "Error found at line" + str(i)
 
-print "current4"
-get_flight_history('C:\\Users\\Resea\\Downloads\\flights\\live_2018-02-23-13_10.clean.csv', 'C:\\Users\\Resea\\Downloads\\flights\\newHistory.csv')
+                i += 1
+                if i % 25 == 0:
+                    print i

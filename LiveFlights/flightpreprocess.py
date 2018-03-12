@@ -1,8 +1,8 @@
 
-def setUpFiles(flights_path = "C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", stop_at_line = 110646):
+def setUpFiles(flights_path = "C:\\Users\\remem\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", stop_at_line = 110646):
     readfile = open(flights_path, "r")
-    writefiletraining = open("C:\\Users\\Resea\\Downloads\\flights\\training.csv", 'w')
-    writefiletests = open("C:\\Users\\Resea\\Downloads\\flights\\tests.csv", 'w')
+    writefiletraining = open("C:\\Users\\remem\\Downloads\\flights\\training.csv", 'w')
+    writefiletests = open("C:\\Users\\remem\\Downloads\\flights\\tests.csv", 'w')
 
     lineNum = 0
     for line in readfile:
@@ -21,13 +21,13 @@ def setUpFiles(flights_path = "C:\\Users\\Resea\\Downloads\\flights\\sorted_2018
     writefiletraining.close()
     writefiletests.close()
 
-def add_Origin_And_Destination(flights_file = "C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", origin_And_Destination_File = "C:\\Users\\remem\\Downloads\\flights\\callsign_airports.csv" ):
+def add_Origin_And_Destination(flights_file = "C:\\Users\\remem\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", origin_And_Destination_File = "C:\\Users\\remem\\Downloads\\flights\\callsign_airports.csv" ):
     flights = open(flights_file, 'r')
 
     #call sign, origin, destination
     origins_And_Destinations = open(origin_And_Destination_File, 'r')
 
-    new_flights_file = open("C:\\Users\\Resea\\Downloads\\flights\\ODsorted_2018-01-20-20_32.csv", 'w')
+    new_flights_file = open("C:\\Users\\remem\\Downloads\\flights\\ODsorted_2018-01-20-20_32.csv", 'w')
 
     origins_Map = {}
     destinations_Map = {}
