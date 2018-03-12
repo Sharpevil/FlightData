@@ -1,7 +1,6 @@
 import numpy as yummy_yummy_numpy
 import csv
 import FlightAwareScraper
-import unidecode
 from Path import Path
 from Flight import Flight
 
@@ -79,6 +78,3 @@ def get_flight_history(callsign_file, new_file, max_flights=0):
                 i += 1
                 if i % 25 == 0:
                     print i
-
-
-get_flight_history('DATA/callsigns2.csv', 'DATA/flight_history_2-20-18_PART_2.csv')
