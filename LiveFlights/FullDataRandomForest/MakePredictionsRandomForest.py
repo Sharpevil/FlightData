@@ -17,15 +17,22 @@ classifierPath = 'C:\\Users\\remem\\Downloads\\flights\\DecisionTrees\\Classifie
 #
 # loadClassifiers()
 
-def predict(latitude, longitude, altitude, heading):
-    classifierNum = 3000
+floor_latitude = 5  # leaves two places after the decimal
+floor_longitude = 6  # leaves two place after the decimal
+floor_ground_speed = 3
+floor_vertical_climb_rate = 5
+floor_altitude = 3
+floor_heading = 3
+
+def predict(latitude, longitude, altitude, heading, ground_speed, vertical_climb_rate):
+    classifierNum = 1
     map = {}
     callsign = ""
     map[""] = 0
     bestCallSign = callsign
     while classifierNum != 8266:
         clf = joblib.load(classifierPath + str(classifierNum))
-        callsign = clf.predict([[latitude, longitude, altitude, heading]])[0]
+        callsign = clf.predict([[latitude, longitude, altitude, heading, ground_speed, vertical_climb_rate]])[0]
         if(not(callsign in map.keys())):
             map[callsign] = 1
         else:
@@ -33,7 +40,7 @@ def predict(latitude, longitude, altitude, heading):
             if(map[bestCallSign] < map[callsign]):
                 bestCallSign = callsign
                 print callsign + ":  " + str(map[callsign]) + '//' + str(classifierNum)
-            if("SAA" in callsign):
+            if("CMP808" in callsign):
                 print callsign + ":  " + str(map[callsign]) + '//' + str(classifierNum)
                 print bestCallSign + ":  " + str(map[bestCallSign]) + '//' + str(classifierNum) + "(Best call sign)"
         if(classifierNum%1000 == 0):
@@ -69,13 +76,16 @@ def score(fileName, stopAtLine = -1):
             print lineNum
         lineList = line.split(',')  # do stuff
 
-        latitude = (lineList[1])
-        longitude = (lineList[2])
-        altitude = (lineList[3])
-        heading = (lineList[9])
+        latitude = (lineList[1])[:floor_latitude]
+        longitude = (lineList[2])[:floor_longitude]
+        altitude = (lineList[3])[:floor_altitude]
+        heading = (lineList[9])[:floor_heading]
+        ground_speed = (lineList[4])[:floor_ground_speed]
+        vertical_climb_rate = lineList[5][:floor_vertical_climb_rate]
+
         callSign = lineList[8]
 
-        predictedCallSign = predict(longitude, latitude, altitude, heading)
+        predictedCallSign = predict(float(longitude), float(latitude), float(altitude), float(heading), float(ground_speed), float(vertical_climb_rate))
 
         if(predictedCallSign == callSign):
             correctPredictions += 1

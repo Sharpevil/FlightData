@@ -1,6 +1,8 @@
 from sklearn import tree
 from sklearn.naive_bayes import GaussianNB
 from LiveFlights.flightpreprocess import setUpFiles
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import StandardScaler
 
 floor_latitude = 5  #leaves two places after the decimal
 floor_longitude = 6 #leaves two place after the decimal
@@ -31,12 +33,13 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
         ground_speed = (lineList[4])[:floor_ground_speed]
         vertical_climb_rate = lineList[5][:floor_vertical_climb_rate]
         heading = (lineList[9])[:floor_heading]
+        lat_long = float(latitude)* (10**5) + (float(longitude)* -1)
         airplane = lineList[7]
         #airCraftID = lineList[7]
         callSign = lineList[8]
         #ingestionTime = lineList[13]
 
-        #data = [float(latitude), float(longitude)]
+        #data = [lat_long]
         data = [float(latitude), float(longitude), float(altitude), float(heading), float(ground_speed), float(vertical_climb_rate)]
         label = callSign
         alldata[lineNum] = data
@@ -44,8 +47,14 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
         lineNum = lineNum + 1
 
     train_flights_file.close()
-    clf = tree.DecisionTreeClassifier()# 94.5% on 1% of the data for latitude, longitude, altitude, heading
-    #clf = GaussianNB() // 51.166%       on 1% of the data for latitude, longitude, altitude, heading
+    #clf = tree.DecisionTreeClassifier()# 94.5% on 1% of the data for latitude, longitude, altitude, heading
+    #clf = GaussianNB() # 51.166%       on 1% of the data for latitude, longitude, altitude, heading
+    clf = MLPClassifier(hidden_layer_sizes=(20), solver='lbfgs', alpha=1e-5,random_state=1)
+    #TODO get the scaler thing working
+    # scaler = StandardScaler()
+    # scaler.fit(alldata)
+    # alldata = scaler.transform(data)
+
     clf.fit(alldata,
             alllabels
             )
@@ -63,12 +72,13 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
         ground_speed = (lineList[4])[:floor_ground_speed]
         vertical_climb_rate = lineList[5][:floor_vertical_climb_rate]
         heading = (lineList[9])[:floor_heading]
+        lat_long = float(latitude)* (10**5) + (float(longitude) * -1)
         airplane = lineList[7]
         # airCraftID = lineList[7]
         callSign = lineList[8]
         # ingestionTime = lineList[13]
 
-        #data = [float(latitude), float(longitude)]
+        #data = [lat_long]
         data = [float(latitude), float(longitude), float(altitude), float(heading), float(ground_speed), float(vertical_climb_rate)]
         label = callSign
         alltestdata[lineNum] = data
@@ -76,6 +86,9 @@ def runPredictions(setupFiles = True, test_size = 5533, data_size = (110646- 553
         lineNum = lineNum + 1
 
     test_flights_file.close()
+    print "Testing"
+    #TODO - here too
+    # alltestdata = scaler.transform(alltestdata)
     print(clf.score(alltestdata, alltestlabels))
     # print(clf.predict([[40.88768,-75.68646,11825,180.0]]))
     # print("Should be SAA203")
