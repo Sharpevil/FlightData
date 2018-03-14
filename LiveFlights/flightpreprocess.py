@@ -61,7 +61,7 @@ def remove_duplicates(old_file_name, new_file_name):
     new_file.close()
     print "removed " + str(duplicates_found) + " elements"
 
-remove_duplicates("C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", "C:\\Users\\Resea\\Downloads\\flights\\sorted_2018-01-20-20_32.noDups.csv" )
+#remove_duplicates("C:\\Users\\Resea\\Downloads\\flights\\live_2018-02-23-13_10.new.csv", "C:\\Users\\Resea\\Downloads\\flights\\live_2018-02-23-13_10.NoDups.csv" )
 
 
 
