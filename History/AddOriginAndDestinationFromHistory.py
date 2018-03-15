@@ -1,10 +1,4 @@
 import os
-def getHistory(historyPath = r"C:\Users\Resea\Downloads\flights\newHistory.csv"):
-    historyFile = open(historyPath)
-    for line in historyFile:
-        end = 1
-        #TODO create a map of call signs to sets of time with origin and destination associated with the time
-
 
 def create_full_flight_history_file(flight_history, airport_code_lookup, optd_por, out_file):
     flight_history_file = open(flight_history, 'r')
@@ -74,5 +68,12 @@ def create_full_flight_history_file(flight_history, airport_code_lookup, optd_po
             continue
         out_file.write(nextLine + '\n')
 
+def getHistory(historyPath):
+    historyFile = open(historyPath)
+    for line in historyFile:
+        end = 1
+        #TODO create a map of call signs to sets of time with origin and destination associated with the time
+
 os.chdir(r"C:\Users\Resea\Downloads\flights")
-create_full_flight_history_file("flight_history.csv", "AirportCodeLocationLookupClean.csv", "optd_por_public.csv", "Best_History.csv")
+
+getHistory()

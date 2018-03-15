@@ -1,6 +1,8 @@
 from dateutil import parser
 import datetime
 import time
+from timezonefinder import TimezoneFinder
+import pytz, datetime
 
 
 monthMap = {}
@@ -25,7 +27,7 @@ class HistoryEntry:
     monthMap["Dec"] = 12
 
 
-    def __init__(self, date, origin, destination, departure_time,departure_time_zone, arrival_time, arrival_time_zone):
+    def __init__(self, date, origin, destination, arrival_time, arrival_lat, arrival_long, departure_time, departure_lat, departure_long):
         self.origin = origin
         self.destination = destination
 
@@ -55,24 +57,35 @@ class HistoryEntry:
 
 
 
-historyEntry = HistoryEntry("1-Mar-18", "KRSW", "KBOS", "11:20AM", "EST", "02:06PM", "EST")
+# historyEntry = HistoryEntry("1-Mar-18", "KRSW", "KBOS", "11:20AM", "EST", "02:06PM", "EST")
+#
+#
+#
+#
+# dt = datetime.datetime
+# year = 2003
+# month = 10
+# day = 11
+# hour = 17
+# minute = 13
+# second = 46
+# print time.mktime((year, month, day, hour, minute, second, 0, 0, 0))
+# print time.time()
+# print time.mktime((2018, 3, 2, 11, 5, 0, 0, 0, 0))
+# print time.mktime((2018, HistoryEntry.monthMap.get("Mar"), 2, 11, 5, 0, 0, -500, -1))*1000
+#
+#
+# print time.timezone
+#
+# print len(HistoryEntry.monthMap)
 
+tf = TimezoneFinder()
 
+latitude = 26.53611111
+longitude = -81.75527778
 
-
-dt = datetime.datetime
-year = 2003
-month = 10
-day = 11
-hour = 17
-minute = 13
-second = 46
-print time.mktime((year, month, day, hour, minute, second, 0, 0, 0))
-print time.time()
-print time.mktime((2018, 3, 2, 11, 5, 0, 0, 0, 0))
-print time.mktime((2018, HistoryEntry.monthMap.get("Mar"), 2, 11, 5, 0, 0, -500, -1))*1000
-
-
-print time.timezone
-
-print len(HistoryEntry.monthMap)
+timezone = tf.timezone_at(lng = longitude, lat = latitude)
+#hour offset is in the format +/- XXYY where XX:YY is the amount of offset, and +/- means positive or negative
+#datetiem takes attributes in the order year, month, day, hour, minute, second, microsecond, and tzinfo.
+hour_offset = pytz.timezone(timezone).localize(datetime.datetime(2018,3,11, 3000)).strftime('%z')
+print hour_offset
