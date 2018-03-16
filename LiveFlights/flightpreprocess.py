@@ -21,13 +21,13 @@ def setUpFiles(flights_path = "C:\\Users\\remem\\Downloads\\flights\\sorted_2018
     writefiletraining.close()
     writefiletests.close()
 
-def add_Origin_And_Destination(flights_file = "C:\\Users\\remem\\Downloads\\flights\\sorted_2018-01-20-20_32.csv", origin_And_Destination_File = "C:\\Users\\remem\\Downloads\\flights\\callsign_airports.csv" ):
+def add_Origin_And_Destination(flights_file, origin_And_Destination_File, new_File ):
     flights = open(flights_file, 'r')
 
     #call sign, origin, destination
     origins_And_Destinations = open(origin_And_Destination_File, 'r')
 
-    new_flights_file = open("C:\\Users\\remem\\Downloads\\flights\\ODsorted_2018-01-20-20_32.csv", 'w')
+    new_flights_file = open(new_File, 'w')
 
     origins_Map = {}
     destinations_Map = {}
