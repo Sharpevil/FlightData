@@ -27,32 +27,49 @@ class HistoryEntry:
     monthMap["Dec"] = 12
 
 
-    def __init__(self, date, origin, destination, arrival_time, arrival_lat, arrival_long, departure_time, departure_lat, departure_long):
+    def __init__(self, date, origin, destination, destination_time, destination_lat, destination_long, origin_time, origin_lat, origin_long):
         self.origin = origin
         self.destination = destination
 
         dateValues = date.split('-')
-        day = int(dateValues[0])
-        month = monthMap.get(dateValues[1])
-        year = int("20" + dateValues[2])
+        origin_day = int(dateValues[0])
+        origin_month = monthMap.get(dateValues[1])
+        origin_year = int("20" + dateValues[2])
 
-        departure_AM_or_PM = departure_time[len(departure_time) - 2:]
-        departure_time = departure_time[:5]
-        departure_hour = int(departure_time[:2])
-        departure_minute = int(departure_time[3:6])
-        if(departure_AM_or_PM == "PM"):
-            departure_hour += 12
+        origin_AM_or_PM = origin_time[len(origin_time) - 2:]
+        origin_time = origin_time[:5]
+        origin_hour = int(origin_time[:2])
+        origin_minute = int(origin_time[3:6])
+        if(origin_AM_or_PM == "PM"):
+            origin_hour += 12
 
-        arrival_AM_or_PM = arrival_time[len(arrival_time) - 2:]
-        arrival_time = arrival_time[:5]
-        arrival_hour = int(arrival_time[:2])
-        arrival_minute = int(arrival_time[3:6])
-        print arrival_AM_or_PM
-        if(arrival_AM_or_PM == "PM"):
-            arrival_hour += 12
+        destination_AM_or_PM = destination_time[len(destination_time) - 2:]
+        destination_time = destination_time[:5]
+        destination_hour = int(destination_time[:2])
+        destination_minute = int(destination_time[3:6])
+        if(destination_AM_or_PM == "PM"):
+            destination_hour += 12
+        if(destination_hour < origin_hour):
+            destination_day = origin_day + 1
+        else:
+            destination_day = origin_day
+        destination_year = origin_year
+        destination_month = origin_month
 
-        print arrival_hour
-        print departure_hour
+
+        origin_time_zone = tf.timezone_at(lng = origin_long, lat = origin_lat)
+        destination_time_zone = tf.timezone_at(lng = destination_long, lat = destination_lat)
+
+        # hour offset is in the format +/- XXYY where XX:YY is the amount of offset, and +/- means positive or negative
+        # datetiem takes attributes in the order year, month, day, hour, minute, second, microsecond, and tzinfo.
+        origin_time_offset = pytz.timezone(origin_time_zone).localize(datetime.datetime(origin_year, origin_month, origin_day, origin_hour, origin_minute)).strftime('%z')
+        destination_time_offset = pytz.timezone(destination_time_zone).localize(datetime.datetime(destination_year, destination_month, destination_day, destination_hour, destination_minute)).strftime('%z')
+
+        if(origin_time_offset[0] == '-'):
+            origin_hour_offset = int(origin_time_offset[0:3])
+        else:
+            origin_hour_offset = int(origin_time_offset[0:2])
+
 
 
 
@@ -87,5 +104,8 @@ longitude = -81.75527778
 timezone = tf.timezone_at(lng = longitude, lat = latitude)
 #hour offset is in the format +/- XXYY where XX:YY is the amount of offset, and +/- means positive or negative
 #datetiem takes attributes in the order year, month, day, hour, minute, second, microsecond, and tzinfo.
-hour_offset = pytz.timezone(timezone).localize(datetime.datetime(2018,3,11, 3000)).strftime('%z')
-print hour_offset
+origin_time_zone = tf.timezone_at(lng= -0.076132, lat=51.508530)#GMT
+origin_time_zone = tf.timezone_at(lng =-74.742935, lat =0.217052 )
+
+hour_offset = pytz.timezone(origin_time_zone).localize(datetime.datetime(2018,2,11)).strftime('%z')
+print int(hour_offset)
