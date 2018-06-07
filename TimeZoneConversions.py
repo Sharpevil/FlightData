@@ -21,6 +21,7 @@ def add_adjusted_epochs(filename, updated):
                     filewriter.writerow(header_row)
                     header = False
 
+
 def add_offsets_to_file(filename, updated):
     lines = 0
     timezones = {'EST': -5}
