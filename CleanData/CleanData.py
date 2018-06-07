@@ -58,5 +58,10 @@ def cleanCreationTime(inFilePath, outFilePath):
     #
     #
     #
-cleanAltitude(inFilePath = "C:\\Users\\Resea\\Downloads\\flights\\CreationCleanedSorted_2018-01-20-20_32.csv", outFilePath = "C:\\Users\\Resea\\Downloads\\flights\\CleanAltitudeSorted_2018-01-20-20_32.csv")
 
+data = '../DATA/'
+filepaths = [data + 'live_2018-01-20-20_32.csv', data + 'live_2018-01-30-13_20.csv', data + 'live_2018-02-03-16_46.csv',
+              data + 'live_2018-02-23-13_10.new.csv', data + 'sorted_2018-01-20-20_32.csv']
+for path in filepaths:
+    cleanAltitude(path, path + 'temp')
+    cleanCreationTime(path + 'temp', path + 'final')
