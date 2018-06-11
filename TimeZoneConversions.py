@@ -22,22 +22,22 @@ def add_adjusted_epochs(filename, updated):
                     origin_epoch = 0
                     dest_epoch = 0
                     try:
-                        pattern = '%d-%b-%Y %I:%M%p'
-                        origin_epoch = int(time.mktime(time.strptime(date + " " + origin_time, pattern)))
-                        dest_epoch = int(time.mktime(time.strptime(date + " " + dest_time, pattern)))
+                        pattern = '%d-%b-%Y %I:%M%p %Z'
+                        origin_epoch = int(time.mktime(time.strptime(date + " " + origin_time + " UTC", pattern)))
+                        dest_epoch = int(time.mktime(time.strptime(date + " " + dest_time + " UTC", pattern)))
                     except ValueError:
                         try:
                             pattern = '%Y-%b-%d %I:%M%p'
-                            origin_epoch = int(time.mktime(time.strptime(date + " " + origin_time, pattern)))
-                            dest_epoch = int(time.mktime(time.strptime(date + " " + dest_time, pattern)))
+                            origin_epoch = int(time.mktime(time.strptime(date + " " + origin_time + " UTC", pattern)))
+                            dest_epoch = int(time.mktime(time.strptime(date + " " + dest_time + " UTC", pattern)))
                         except:
                             origin_epoch = -1
                             dest_epoch = -1
                     if "PM" in origin_time and "AM" in dest_time:
                         dest_epoch += 86400
                     try:
-                        origin_epoch += (int(origin_offset) * 3600)
-                        dest_epoch += (int(dest_offset) * 3600)
+                        origin_epoch += (int(origin_offset) * -3600) - 18000    #Remove the automatic EST offset, add
+                        dest_epoch += (int(dest_offset) * -3600) - 18000        #the UTC offset.
                     except ValueError:
                         print "Diverted Flight"
 
