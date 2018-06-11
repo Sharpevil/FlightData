@@ -1,7 +1,9 @@
 import csv
-import requests
+# import requests
+import time
 
 url = "http://api.geonames.org/timezoneJSON?lat=<LAT>&lng=<LONG>&username=armstr27"
+
 
 def add_adjusted_epochs(filename, updated):
     with open(filename, 'rb') as original_file:
@@ -11,7 +13,33 @@ def add_adjusted_epochs(filename, updated):
             header = True
             for row in filereader:
                 if not header:
-                    a = 1
+                    date = row[1]
+                    origin_time = row[7]
+                    dest_time = row[9]
+                    pattern = ''
+                    origin_epoch = 0
+                    dest_epoch = 0
+                    try:
+                        pattern = '%d-%b-%Y %I:%M%p'
+                        origin_epoch = int(time.mktime(time.strptime(date + " " + origin_time, pattern)))
+                        dest_epoch = int(time.mktime(time.strptime(date + " " + dest_time, pattern)))
+                    except ValueError:
+                        try:
+                            pattern = '%Y-%b-%d %I:%M%p'
+                            origin_epoch = int(time.mktime(time.strptime(date + " " + origin_time, pattern)))
+                            dest_epoch = int(time.mktime(time.strptime(date + " " + dest_time, pattern)))
+                        except:
+                            origin_epoch = -1
+                            dest_epoch = -1
+                    if "AM" in origin_time and "PM" in dest_time:
+                        dest_epoch += 86400
+
+                    new_row = []
+                    for col in row:
+                        new_row.append(col)
+                    new_row.append(origin_epoch)
+                    new_row.append(dest_epoch)
+                    filewriter.writerow(new_row)
                 else:
                     header_row = []
                     for column in row:
