@@ -33,7 +33,7 @@ def add_adjusted_epochs(filename, updated):
                         except:
                             origin_epoch = -1
                             dest_epoch = -1
-                    if "AM" in origin_time and "PM" in dest_time:
+                    if "PM" in origin_time and "AM" in dest_time:
                         dest_epoch += 86400
                     try:
                         origin_epoch += (int(origin_offset) * 3600)
